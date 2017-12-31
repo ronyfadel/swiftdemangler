@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8">
+        <title>Swift Demangler</title>
+        <meta name="description" content="Swift Demangler allows you to demangle Swift symbols in the browser">
+        <meta name="keywords" content="Swift,Demangle,Objective-C,Mangled,Debugging,Crash,Report">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+
+        <style type="text/css">
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: menlo, monospace;
+        }
+        body {
+            color: #333333;
+            font-size: 1em;
+            letter-spacing: 0.011em;
+            font-style:normal;
+            background: #ededed;
+        }
+        .main h1 {
+            font-size: 2em;
+            text-align: center;
+            padding-top: 20px;
+            font-weight: 600;
+        }
+        .main .code-content {
+            display: block;
+            left: 0;
+            right: 0;
+            margin: 0 auto 50px;
+            width: 100%;
+            font-size: 12px;
+            font-weight: 300;
+            line-height: 17px;
+            border-radius: 7px;
+            background: white;
+            border: 0;
+            border-width: 0;
+            padding: 5px;
+            min-height: 300px;
+            height: auto;
+        }
+        .main textarea:focus {
+            outline: none;
+        }
+        .main .description {
+            font-size: 12px;
+            margin-top: 5px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .centered-content {
+            margin: auto;
+            width: 90%;
+        }
+        #result {
+            margin: 20px auto 100px;
+            white-space: pre-wrap;
+            min-height: 0px;
+        }
+        #result:empty {
+            display: none;
+        }
+        .highlighted {
+            background-color: #FFFD38;
+            font-weight: bold;
+            box-shadow: 0px 0px 3px -1px rgba(0, 0, 0, 0.5);
+        }
+        #demangled-output-label {
+            margin-top: 20px;
+            display: none;
+        }
+        #text-view {
+            resize: none;
+        }
+        footer {
+          font-size: 12px;
+          text-align: right;
+          color: #999;
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 50px;
+        }
+        .inline-code {
+            background-color: #CCC;
+            border-radius: 3px;
+            padding: 2px;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="main centered-content">
+            <h1>Swift Demangler</h1>
+            <p class="description">Swift Demangler translates cryptic Swift symbols (<i>e.g.</i> <code class="inline-code">_TtP3foo3bar_</code>) into a human-readable form (<i>e.g.</i> <code class="inline-code">foo.bar</code>)
+            <br>
+            Based on <a href="https://github.com/apple/swift/blob/master/lib/Demangling/Demangler.cpp">Demangler.cpp</a> and <a href="https://github.com/kripken/emscripten">Emscripten</a>
+            </p>
+            <textarea id="text-view" class="code-content" placeholder="Insert mangled Swift symbols here (e.g. from a crash report)..."></textarea>
+            <h3 id="demangled-output-label">Demangled Output:</h3>
+            <code id="result" class="code-content"></code>
+        </div>
+        <footer>
+            <div class="centered-content">
+                <p>Made in Paris with <span style="opacity: 0.8;">❤️ </span>© 2017</p>
+            </div>
+        </footer>
+
+        <!-- demangle.js is generated from https://github.com/apple/swift/lib/Demangling using Emscripten -->
+        <script src="js/demangle.js"></script>
+        <script src="js/vendor/jquery-3.2.1.min.js"></script>
+        <script>
+            var pattern = /(?:_T|_\$S|\$S)[^\s]+/g;
+
+            $('#text-view').on('input', function() {
+                var text = $(this).val();
+                function encode(str) {
+                    return str.replace(/[\u00A0-\u9999<>\&]/gim, function(i) { return '&#'+i.charCodeAt(0)+';';});
+                }
+                var encodedStr = encode(text);
+
+                var html = encodedStr.replace(pattern, function(mangled) {
+                    var demangled;
+                    try {
+                        demangled = Module.demangle(mangled);
+                    } catch (exception) {
+                        console.log("exception caught while demangling: " + mangled + "\n" +  exception);
+                        demangled = mangled;
+                    }
+                    if (demangled != mangled) {
+                        return '<span class="highlighted">' + encode(demangled) + '</span>';
+                    } else {
+                        return mangled;
+                    }
+                });
+
+                $('#result').html(html);
+
+                var el = $("#demangled-output-label");
+                if (html) { el.show(); } else { el.hide(); }
+            });
+        </script>
+
+        <script>
+            window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
+            ga('create','UA-111745876-1','auto');ga('send','pageview')
+        </script>
+        <script src="https://www.google-analytics.com/analytics.js" async defer></script>
+    </body>
+</html>
