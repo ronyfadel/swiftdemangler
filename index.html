@@ -108,9 +108,7 @@
     <body>
         <div class="main centered-content">
             <h1>Swift Demangler</h1>
-            <p class="description">Swift Demangler translates cryptic Swift symbols (<i>e.g.</i> <code class="inline-code">_TtP3foo3bar_</code>) into a human-readable form (<i>e.g.</i> <code class="inline-code">foo.bar</code>)
-            <br>
-            Based on <a href="https://github.com/apple/swift/blob/master/lib/Demangling/Demangler.cpp">Demangler.cpp</a> and <a href="https://github.com/kripken/emscripten">Emscripten</a>
+            <p class="description">Swift Demangler translates cryptic Swift symbols (<i>e.g.</i> <code class="inline-code" id="mangled-symbol">_TtP3foo3bar_</code>) into a human-readable form (<i>e.g.</i> <code class="inline-code">foo.bar</code>)
             </p>
             <textarea id="text-view" class="code-content" placeholder="Insert mangled Swift symbols here (e.g. from a crash report)..."></textarea>
             <h3 id="demangled-output-label">Demangled Output:</h3>
@@ -118,7 +116,8 @@
         </div>
         <footer>
             <div class="centered-content">
-                <p>Made in Paris with <span style="opacity: 0.8;">❤️ </span>© 2017</p>
+                <p>Based on <a href="https://github.com/apple/swift/blob/master/lib/Demangling/Demangler.cpp">Demangler.cpp</a> and <a href="https://github.com/kripken/emscripten">Emscripten</a></p>
+                <p>Made in Paris with <span style="opacity: 0.8;">❤️ </span></p>
             </div>
         </footer>
 
