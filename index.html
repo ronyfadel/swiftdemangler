@@ -122,6 +122,12 @@
         </footer>
 
         <!-- demangle.js is generated from https://github.com/apple/swift/lib/Demangling using Emscripten -->
+        <script>
+            var Module = {};
+            Module.locateFile = function(url) {
+                return "js/" + url;
+            }
+        </script>
         <script src="js/demangle.js"></script>
         <script src="js/vendor/jquery-3.2.1.min.js"></script>
         <script>
