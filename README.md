@@ -1,4 +1,4 @@
 # Swift Demangler
 A Swift symbol demangler that runs in the browser.
 
-Click [here](https://ronyfadel.github.io/swiftdemangler/) for a demo.
+Click [here](https://www.swiftdemangler.com/) for a demo.
