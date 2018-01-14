@@ -139,6 +139,9 @@
 
             $('#text-view').on('input', function() {
                 var text = $(this).val();
+
+                window.localStorage["mangledText"] = text;
+
                 function encode(str) {
                     return str.replace(/[\u00A0-\u9999<>\&]/gim, function(i) { return '&#'+i.charCodeAt(0)+';';});
                 }
@@ -161,9 +164,17 @@
 
                 $('#result').html(html);
 
+
                 var el = $("#demangled-output-label");
                 if (html) { el.show(); } else { el.hide(); }
             });
+
+            Module['onRuntimeInitialized'] = function() {
+                var mangledText = window.localStorage["mangledText"];
+                if (mangledText) {
+                    $('#text-view').val(mangledText).trigger('input');
+                }
+            };
         </script>
 
         <script>
