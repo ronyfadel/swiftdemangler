@@ -135,7 +135,7 @@
                 $('#text-view').val($(this).html()).trigger('input');
             });
 
-            var pattern = /(?:_T|_\$S|\$S)[^\s]+/g;
+            var pattern = /(?:_T|_\$S|\$S)[_a-zA-Z0-9$.]+/g;
 
             $('#text-view').on('input', function() {
                 var text = $(this).val();
